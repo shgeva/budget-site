@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>תקציב הרשות במבט פתוח</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&family=Secular+One&display=swap">
+<style>
+/* Layout: a donut you drill into on one side, a panel that follows the selection on the other. */
+:root {
+  --bg: #f3f6f5;
+  --surface: #ffffff;
+  --ink: #12201f;
+  --ink-2: #4a5958;
+  --muted: #7a8786;
+  --line: #dfe5e3;
+  --line-strong: #c3ccca;
+  --accent: #0b6e78;
+  --accent-soft: #dcecee;
+  --up: #9a3412;
+  --down: #006300;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100; --s5: #e87ba4; --s6: #008300; --s7: #6250d6;
+  --other: #b8b6ad;
+  --exec: #2a78d6; --budget: #9ec5f4;
+  --font-display: "Secular One", "Assistant", system-ui, sans-serif;
+  --font-body: "Assistant", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1414; --surface: #172020; --ink: #e8eeed; --ink-2: #b9c4c3; --muted: #879392;
+    --line: #253030; --line-strong: #364343; --accent: #4fb3bd; --accent-soft: #1d3436;
+    --up: #f19a6b; --down: #3fbf5a;
+    --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9;
+    --other: #5c5f5b;
+    --exec: #3987e5; --budget: #1c5cab;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1414; --surface: #172020; --ink: #e8eeed; --ink-2: #b9c4c3; --muted: #879392;
+  --line: #253030; --line-strong: #364343; --accent: #4fb3bd; --accent-soft: #1d3436;
+  --up: #f19a6b; --down: #3fbf5a;
+  --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500; --s5: #d55181; --s6: #008300; --s7: #9085e9;
+  --other: #5c5f5b;
+  --exec: #3987e5; --budget: #1c5cab;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+#gate { min-height: 100vh; display: grid; place-items: center; padding-block: 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+#gate-form { width: 100%; max-width: 400px; display: grid; gap: 12px; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 10px; padding: 24px; }
+#gate-form h1 { font-size: 28px; }
+#gate-form label { font-weight: 600; }
+#gate-form input { font: inherit; padding: 9px 12px; border: 1px solid var(--line-strong); border-radius: var(--r);
+  background: var(--surface); color: var(--ink); width: 100%; }
+#gate-form button { font: inherit; font-weight: 700; padding: 9px 14px; border: 0; border-radius: var(--r);
+  background: var(--accent); color: var(--surface); cursor: pointer; }
+#gate-form button:disabled { opacity: .6; cursor: progress; }
+#gate-err { color: var(--up); font-size: 15px; }
+body {
+  margin: 0;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  direction: rtl;
+}
+.wrap {
+  max-width: 1180px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 56px;
+  display: grid; gap: 24px;
+}
+.num { font-variant-numeric: tabular-nums; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font-family: var(--font-display); font-weight: 400; font-size: clamp(30px, 6vw, 44px); line-height: 1.1; }
+h2 { font-family: var(--font-display); font-weight: 400; font-size: 24px; }
+h3 { font-size: 17px; font-weight: 700; }
+p { margin: 0; }
+.eyebrow { font-size: 14px; color: var(--muted); letter-spacing: .02em; }
+.lede { color: var(--ink-2); max-width: 70ch; }
+.lede b { color: var(--ink); }
+
+header.top { display: grid; gap: 10px; }
+
+nav.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab, .chip {
+  font: inherit; cursor: pointer; border: 1px solid var(--line-strong);
+  background: var(--surface); color: var(--ink); border-radius: 999px;
+  padding: 6px 14px; font-size: 15px;
+}
+.tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.chip { font-size: 14px; padding: 4px 11px; }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); font-weight: 700; }
+.tab:focus-visible, .chip:focus-visible, button:focus-visible, input:focus-visible, .slice:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
+}
+.controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.controls .label { font-size: 14px; color: var(--muted); margin-inline-end: 4px; }
+
+section.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 20px; display: grid; gap: 18px; min-width: 0;
+}
+.panel-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; align-items: baseline; }
+
+/* explorer: donut + side panel */
+.explorer { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 28px; align-items: start; }
+@media (max-width: 860px) { .explorer { grid-template-columns: minmax(0, 1fr); } }
+.donut-col { display: grid; gap: 12px; justify-items: center; position: sticky; top: 12px; }
+@media (max-width: 860px) { .donut-col { position: static; } }
+.crumbs { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 15px; justify-self: stretch; }
+.crumbs button { background: none; border: 0; padding: 2px 4px; font: inherit; color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.crumbs .here { font-weight: 700; padding: 2px 4px; }
+.crumbs .sep { color: var(--muted); }
+.donut { width: 100%; max-width: 440px; height: auto; display: block; }
+.slice { cursor: pointer; stroke: var(--surface); stroke-width: 3; transition: opacity .15s; }
+.slice:hover { opacity: .85; }
+.leaf .slice { cursor: default; }
+.donut .pct { font-family: var(--font-body); font-weight: 700; font-size: 15px; pointer-events: none; }
+.donut .c-k { fill: var(--ink-2); font-size: 15px; font-family: var(--font-body); }
+.donut .c-v { fill: var(--ink); font-size: 30px; font-weight: 700; font-family: var(--font-body); }
+.donut .c-h { fill: var(--accent); font-size: 14px; font-family: var(--font-body); }
+.backbtn { font: inherit; font-size: 14px; background: none; border: 1px solid var(--line-strong); color: var(--ink); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { .slice { transition: none; } }
+
+.side { display: grid; gap: 16px; min-width: 0; }
+.side-head { display: grid; gap: 2px; }
+.side-head .sub { color: var(--muted); font-size: 14px; }
+.facts { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 15px; color: var(--ink-2); padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.facts b { color: var(--ink); }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 10px; height: 10px; border-radius: 2px; flex: none; display: inline-block; }
+
+/* children list */
+.kids { display: grid; max-height: 560px; overflow-y: auto; border-top: 1px solid var(--line); }
+.kid {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; gap: 2px 10px; align-items: center;
+  padding: 9px 4px; border: 0; border-bottom: 1px solid var(--line); background: none;
+  font: inherit; color: inherit; text-align: right; width: 100%; cursor: pointer;
+}
+.kid:hover { background: var(--accent-soft); }
+.kid.leaf { cursor: default; }
+.kid.leaf:hover { background: none; }
+.kid .nm { font-weight: 600; min-width: 0; }
+.kid .nm .code { color: var(--muted); font-weight: 400; font-size: 13px; }
+.kid .amt { font-weight: 700; white-space: nowrap; text-align: left; }
+.kid .go { color: var(--accent); font-size: 18px; width: 12px; text-align: center; }
+.kid .meta { grid-column: 2 / 4; display: flex; gap: 12px; align-items: center; font-size: 13px; color: var(--ink-2); }
+.kid .track { flex: 1; height: 4px; background: var(--line); border-radius: 2px; display: flex; }
+.kid .bar { height: 4px; border-radius: 0 2px 2px 0; min-width: 2px; }
+.kid .mine { color: var(--accent); font-weight: 700; }
+
+/* year chart */
+.yc { width: 100%; height: auto; display: block; }
+.yc text { fill: var(--muted); font-size: 12px; font-family: var(--font-body); }
+.yc .val { fill: var(--ink-2); font-size: 12px; }
+.yc .grid { stroke: var(--line); }
+.mini h4 { margin: 0 0 6px; font-size: 15px; color: var(--ink); font-weight: 700; }
+
+.stack { display: flex; height: 22px; gap: 2px; border-radius: 4px; overflow: hidden; }
+.stack > div { min-width: 2px; }
+
+/* tables */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 6px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; background: var(--bg); position: sticky; top: 0; }
+td.n, th.n { text-align: left; font-variant-numeric: tabular-nums; }
+td.code { color: var(--muted); font-size: 13px; }
+td.wrap-cell { white-space: normal; min-width: 180px; }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--accent-soft); }
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--ink); }
+.delta-up { color: var(--up); }
+.delta-down { color: var(--down); }
+
+/* plan vs actual */
+.pv { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 10px 0; border-top: 1px solid var(--line); }
+.pv .track { grid-column: 1 / -1; position: relative; height: 14px; background: var(--bg); border-radius: 3px; }
+.pv .fill { position: absolute; inset-block: 2px; right: 0; background: var(--exec); border-radius: 0 3px 3px 0; }
+.pv .tick { position: absolute; inset-block: -2px; width: 2px; background: var(--ink); }
+.pill { font-size: 13px; padding: 1px 8px; border-radius: 999px; border: 1px solid var(--line-strong); white-space: nowrap; }
+.pill.over { border-color: var(--up); color: var(--up); }
+
+.calc { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 12px 14px; background: var(--bg); border-radius: var(--r); }
+.calc input, .search {
+  font: inherit; font-size: 16px; padding: 7px 12px; border: 1px solid var(--line-strong);
+  border-radius: var(--r); background: var(--surface); color: var(--ink); width: 160px; max-width: 100%;
+}
+.search { width: 100%; max-width: 360px; }
+.note { font-size: 14px; color: var(--muted); max-width: 70ch; }
+
+footer.src { display: grid; gap: 8px; font-size: 14px; color: var(--ink-2); max-width: 72ch; }
+footer.src h2 { font-size: 20px; color: var(--ink); }
+
+#tip {
+  position: fixed; pointer-events: none; z-index: 20; background: var(--ink); color: var(--bg);
+  font-size: 13px; padding: 6px 9px; border-radius: 5px; max-width: 260px; line-height: 1.35;
+}
+@media (max-width: 520px) {
+  section.panel { padding: 14px; }
+  .donut .c-v { font-size: 26px; }
+}
+</style>
+
+<div id="gate" hidden>
+  <form id="gate-form">
+    <h1>האתר מוגן בסיסמה</h1>
+    <p class="lede">הקלידו את הסיסמה שקיבלתם. היא באותיות אנגליות ובספרות.</p>
+    <label for="gate-pw">סיסמה</label>
+    <input id="gate-pw" type="password" dir="ltr" autocomplete="off" spellcheck="false" required>
+    <p id="gate-err" role="alert" hidden>הסיסמה שגויה. בדקו שהמקלדת באנגלית ונסו שוב.</p>
+    <button type="submit">כניסה</button>
+  </form>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow" id="authority"></p>
+    <h1 id="headline">לאן הולך הכסף?</h1>
+    <p class="lede" id="lede"></p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="תצוגות">
+    <button class="tab" role="tab" id="tab-out" data-view="out">לאן הולך הכסף</button>
+    <button class="tab" role="tab" id="tab-in" data-view="in">מאיפה הוא בא</button>
+    <button class="tab" role="tab" id="tab-plan" data-view="plan">תכנון מול ביצוע</button>
+    <button class="tab" role="tab" id="tab-acts" data-view="acts">פעילויות</button>
+  </nav>
+
+  <div class="controls" id="measures" aria-label="נתון מוצג"></div>
+
+  <main id="view" style="display:grid;gap:24px"></main>
+
+  <footer class="src" id="sources"></footer>
+</div>
+<div id="tip" hidden></div>
+
+<script src="data.js"></script>
+<script>
+function startApp(D) {
+  const C = { e24: 0, e25: 1, e26: 2, b25: 3, b26: 4 };
+  const MEASURES = [
+    { id: "b26", col: 4, cmp: 3, label: "תקציב 2026", cmpLabel: "תקציב 2025" },
+    { id: "b25", col: 3, cmp: null, label: "תקציב 2025" },
+    { id: "e26", col: 2, cmp: 1, label: "ביצוע 2026", cmpLabel: "ביצוע 2025" },
+    { id: "e25", col: 1, cmp: 0, label: "ביצוע 2025", cmpLabel: "ביצוע 2024" },
+    { id: "e24", col: 0, cmp: null, label: "ביצוע 2024" },
+  ];
+  const COL_LABELS = ["ביצוע 2024", "ביצוע 2025", "ביצוע 2026", "תקציב 2025", "תקציב 2026"];
+  const SLOTS = ["--s1", "--s2", "--s3", "--s4", "--s5", "--s6", "--s7"];
+  const MAX_SLICES = SLOTS.length; // the rest fold into "אחר"
+  const SECTION_NAMES = { own: "הכנסות עצמיות", gov: "ממשרדי הממשלה", salary: "שכר", ops: "פעולות" };
+
+  const state = { view: "out", measure: "b26", path: { out: [], in: [] }, arnona: null,
+                  sort: { key: "out", dir: -1 }, q: "", openAct: null, planYear: 2026 };
+
+  // ---------- data
+  const items = D.items.map(r => ({ code: r[0], name: r[1], kind: r[2], chapter: r[3], activity: r[4], section: r[5], v: r.slice(6, 11) }));
+  const actByCode = Object.fromEntries(D.activities.map(a => [a.code, a]));
+  const sumV = list => list.reduce((t, i) => t.map((x, k) => x + i.v[k]), [0, 0, 0, 0, 0]);
+
+  // Tree: root -> chapter -> activity (within that chapter) -> budget line
+  function rootNode(kind) {
+    const its = items.filter(i => i.kind === kind);
+    return { key: "root", name: kind === "out" ? "כל ההוצאות" : "כל ההכנסות", items: its,
+      v: kind === "out" ? D.totals.out : D.totals.in, unit: "פרקים",
+      kids: () => D.chapters.filter(c => c.kind === kind).map(c => chapterNode(c, its)) };
+  }
+  function chapterNode(c, pool) {
+    const its = pool.filter(i => i.chapter === c.code);
+    return { key: "c" + c.code, name: c.name, code: "פרק " + c.code, items: its, v: c.v, unit: "פעילויות",
+      kids: () => {
+        const by = {};
+        its.forEach(i => (by[i.activity] ||= []).push(i));
+        return Object.entries(by).map(([a, list]) => activityNode(a, list, c.code));
+      } };
+  }
+  function activityNode(code, list, ch) {
+    const act = actByCode[code];
+    return { key: "a" + code, name: act ? act.name : code, code: code, items: list, v: sumV(list), unit: "סעיפים",
+      pos: act ? act.pos : null,
+      kids: () => list.map(i => ({ key: "i" + i.code, name: i.name, code: i.code, items: [i], v: i.v, kids: null })) };
+  }
+  function otherNode(parentKey, rest, unit) {
+    const its = rest.flatMap(n => n.items);
+    return { key: parentKey + "~", name: "אחר", other: true, items: its, v: rest.reduce((t, n) => t.map((x, k) => x + n.v[k]), [0, 0, 0, 0, 0]),
+      unit, kids: () => rest };
+  }
+  // the slices a node is drawn with: positive children, top 7 + "אחר"
+  function slices(node, col) {
+    const kids = (node.kids ? node.kids() : []).filter(n => n.v[col] > 0).sort((a, b) => b.v[col] - a.v[col]);
+    if (kids.length <= MAX_SLICES) return { shown: kids, other: null, all: kids };
+    const shown = kids.slice(0, MAX_SLICES);
+    const other = otherNode(node.key, kids.slice(MAX_SLICES), node.unit);
+    return { shown, other, all: kids };
+  }
+  function resolvePath(kind, col) {
+    const chain = [rootNode(kind)];
+    for (const key of state.path[kind]) {
+      const s = slices(chain[chain.length - 1], col);
+      const next = [...s.shown, ...(s.other ? [s.other] : [])].find(n => n.key === key) || s.all.find(n => n.key === key);
+      if (!next) break;
+      chain.push(next);
+    }
+    state.path[kind] = chain.slice(1).map(n => n.key);
+    return chain;
+  }
+
+  // ---------- formatting
+  const nf = new Intl.NumberFormat("he-IL");
+  function trim(x) { return x >= 10 ? x.toFixed(1).replace(/\.0$/, "") : x.toFixed(2).replace(/0$/, "").replace(/\.0?$/, ""); }
+  function money(n) {
+    const a = Math.abs(n), s = n < 0 ? "−" : "";
+    if (a >= 1e6) return s + trim(a / 1e6) + " מיליון ₪";
+    if (a >= 1e3) return s + Math.round(a / 1e3) + " אלף ₪";
+    return s + nf.format(Math.round(a)) + " ₪";
+  }
+  const full = n => (n == null ? "—" : nf.format(Math.round(n)));
+  function pct(part, whole) {
+    if (!whole) return "—";
+    const p = part / whole * 100;
+    if (p > 0 && p < 0.1) return "פחות מ-0.1%";
+    return (p >= 10 ? p.toFixed(0) : p.toFixed(1)) + "%";
+  }
+  function delta(cur, prev) {
+    if (prev == null || !prev) return "";
+    const d = (cur - prev) / Math.abs(prev) * 100;
+    if (Math.abs(d) < 0.05) return "ללא שינוי";
+    const v = Math.abs(d) >= 10 ? Math.abs(d).toFixed(0) : Math.abs(d).toFixed(1);
+    return `<span class="num">${d > 0 ? "▲" : "▼"} ${v}%</span>`;
+  }
+  function shortNum(n) {
+    const a = Math.abs(n);
+    if (a >= 1e6) return trim(a / 1e6) + "מ׳";
+    if (a >= 1e3) return Math.round(a / 1e3) + "א׳";
+    return String(Math.round(a));
+  }
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const M = () => MEASURES.find(m => m.id === state.measure);
+
+  // ---------- tooltip
+  const tip = document.getElementById("tip");
+  document.addEventListener("pointermove", e => {
+    const t = e.target.closest && e.target.closest("[data-tip]");
+    if (!t) { tip.hidden = true; return; }
+    tip.innerHTML = t.getAttribute("data-tip");
+    tip.hidden = false;
+    const w = tip.offsetWidth, h = tip.offsetHeight;
+    let x = e.clientX + 14, y = e.clientY + 14;
+    if (x + w > innerWidth - 8) x = e.clientX - w - 14;
+    if (y + h > innerHeight - 8) y = e.clientY - h - 14;
+    tip.style.left = Math.max(8, x) + "px"; tip.style.top = Math.max(8, y) + "px";
+  });
+
+  // ---------- header + controls
+  document.getElementById("authority").textContent = D.meta.authority + " · ספר התקציב בשפה פשוטה";
+  document.title = "תקציב " + D.meta.authority;
+
+  function renderMeasures() {
+    const el = document.getElementById("measures");
+    el.hidden = state.view === "plan";
+    el.innerHTML = `<span class="label">מציגים:</span>` + MEASURES.map(m =>
+      `<button class="chip" data-m="${m.id}" aria-pressed="${m.id === state.measure}">${m.label}</button>`).join("");
+  }
+  document.getElementById("measures").addEventListener("click", e => {
+    const b = e.target.closest("[data-m]"); if (!b) return;
+    state.measure = b.dataset.m; render();
+  });
+  document.querySelector("nav.tabs").addEventListener("click", e => {
+    const b = e.target.closest("[data-view]"); if (!b) return;
+    setView(b.dataset.view);
+  });
+  function setView(v) {
+    state.view = v; state.openAct = null;
+    try { history.replaceState(null, "", "#" + v); } catch (_) {}
+    render();
+  }
+
+  // ---------- donut
+  function arcPath(cx, cy, r0, r1, a0, a1) {
+    // angles in radians, 0 = 12 o'clock, clockwise
+    const p = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+    const large = a1 - a0 > Math.PI ? 1 : 0;
+    const [x0, y0] = p(r1, a0), [x1, y1] = p(r1, a1), [x2, y2] = p(r0, a1), [x3, y3] = p(r0, a0);
+    return `M${x0},${y0} A${r1},${r1} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${r0},${r0} 0 ${large} 0 ${x3},${y3} Z`;
+  }
+  function donut(node, s, col, kind) {
+    const total = s.all.reduce((t, n) => t + n.v[col], 0);
+    const parts = [...s.shown.map((n, i) => ({ n, color: `var(${SLOTS[i]})` })), ...(s.other ? [{ n: s.other, color: "var(--other)" }] : [])];
+    const S = 400, cx = S / 2, cy = S / 2, r1 = 190, r0 = 112;
+    let a = 0, out = `<svg class="donut" viewBox="0 0 ${S} ${S}" role="img" aria-label="חלוקה של ${esc(node.name)}">`;
+    if (!parts.length) {
+      out += `<circle cx="${cx}" cy="${cy}" r="${(r0 + r1) / 2}" fill="none" stroke="var(--line)" stroke-width="${r1 - r0}"/>`;
+    }
+    parts.forEach(({ n, color }) => {
+      const frac = n.v[col] / total;
+      const a1 = a + frac * Math.PI * 2;
+      const leaf = !n.kids;
+      const d = frac >= 0.9999 ? null : arcPath(cx, cy, r0, r1, a, a1);
+      const tipTxt = `<b>${esc(n.name)}</b><br>${money(n.v[col])} · ${pct(n.v[col], total)}${leaf ? "" : "<br>לחצו לפירוט"}`;
+      const attrs = `class="slice" fill="${color}" data-tip="${esc(tipTxt)}" ${leaf ? "" : `data-drill="${n.key}" tabindex="0" role="button" aria-label="${esc(n.name)}, ${pct(n.v[col], total)}"`}`;
+      out += d ? `<path d="${d}" ${attrs}/>` : `<circle cx="${cx}" cy="${cy}" r="${(r0 + r1) / 2}" style="fill:none;stroke:${color};stroke-width:${r1 - r0}px" ${attrs.replace(` fill="${color}"`, "")}/>`;
+      if (frac >= 0.045) {
+        const mid = (a + a1) / 2, rm = (r0 + r1) / 2;
+        const lx = cx + rm * Math.sin(mid), ly = cy - rm * Math.cos(mid);
+        const ink = color === "var(--s4)" || color === "var(--other)" ? "#0b0b0b" : "#ffffff";
+        out += `<text class="pct num" x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="central" fill="${ink}">${pct(n.v[col], total)}</text>`;
+      }
+      a = a1;
+    });
+    out += `<text class="c-k" x="${cx}" y="${cy - 34}" text-anchor="middle">${esc(node.name)}</text>`;
+    out += `<text class="c-v num" x="${cx}" y="${cy + 6}" text-anchor="middle">${esc(money(node.v[col]))}</text>`;
+    out += `<text class="c-h" x="${cx}" y="${cy + 40}" text-anchor="middle">${parts.length && parts.some(p => p.n.kids) ? "לחצו על פלח לפירוט" : esc(M().label)}</text>`;
+    out += `</svg>`;
+    return { svg: out, colorOf: Object.fromEntries(parts.map(p => [p.n.key, p.color])) };
+  }
+
+  // ---------- year chart (budget vs actual, 2024-2026)
+  function yearChart(v) {
+    const years = [
+      { y: "2024", b: null, e: v[C.e24] },
+      { y: "2025", b: v[C.b25], e: v[C.e25] },
+      { y: "2026", b: v[C.b26], e: v[C.e26] },
+    ];
+    const max = Math.max(1, ...years.flatMap(d => [d.b || 0, d.e || 0]));
+    const W = 480, H = 190, top = 26, bottom = 24, left = 6, right = 6;
+    const ih = H - top - bottom, gw = (W - left - right) / 3, bw = 46;
+    let s = `<svg class="yc" viewBox="0 0 ${W} ${H}" role="img" aria-label="תקציב וביצוע לפי שנים">`;
+    [0.5, 1].forEach(f => { s += `<line class="grid" x1="${left}" x2="${W - right}" y1="${top + ih - f * ih}" y2="${top + ih - f * ih}" stroke-width="1"/>`; });
+    s += `<line x1="${left}" x2="${W - right}" y1="${top + ih}" y2="${top + ih}" stroke="var(--line-strong)" stroke-width="1"/>`;
+    years.forEach((d, i) => {
+      const cx = W - right - gw * i - gw / 2; // RTL: 2024 on the right
+      [["תקציב", d.b, "var(--budget)", cx + 4], ["ביצוע", d.e, "var(--exec)", cx - bw - 4]].forEach(([lab, val, col, x]) => {
+        if (val == null) return;
+        const h = Math.max(val > 0 ? 2 : 0, Math.max(0, val) / max * ih);
+        const y = top + ih - h, rr = Math.min(4, h);
+        s += `<g data-tip="${lab} ${d.y}: ${esc(full(val))} ₪"><rect x="${x - 4}" y="${top}" width="${bw + 8}" height="${ih}" fill="transparent"/>`;
+        s += `<path d="M${x},${top + ih} V${y + rr} q0,-${rr} ${rr},-${rr} h${bw - 2 * rr} q${rr},0 ${rr},${rr} V${top + ih} Z" fill="${col}"/></g>`;
+        s += `<text class="val" x="${x + bw / 2}" y="${y - 6}" text-anchor="middle">${esc(shortNum(val))}</text>`;
+      });
+      s += `<text x="${cx}" y="${H - 6}" text-anchor="middle">${d.y}</text>`;
+    });
+    s += `</svg>`;
+    return `<div class="mini"><h4>לאורך השנים</h4>${s}
+      <div class="legend"><span><i class="sw" style="background:var(--budget)"></i>תקציב</span><span><i class="sw" style="background:var(--exec)"></i>ביצוע בפועל</span></div></div>`;
+  }
+
+  // ---------- view: where the money goes / comes from
+  function renderFlow(kind) {
+    const m = M(), col = m.col;
+    const chain = resolvePath(kind, col);
+    const node = chain[chain.length - 1];
+    const s = slices(node, col);
+    const { svg, colorOf } = donut(node, s, col, kind);
+    const total = node.v[col];
+    const root = chain[0].v[col];
+
+    const crumbs = chain.map((n, i) => i === chain.length - 1
+      ? `<span class="here">${esc(n.name)}</span>`
+      : `<button data-up="${i}">${esc(n.name)}</button><span class="sep">‹</span>`).join("");
+
+    const secA = kind === "out" ? "salary" : "own", secB = kind === "out" ? "ops" : "gov";
+    const sumSec = sec => node.items.filter(i => i.section === sec).reduce((t, i) => t + i.v[col], 0);
+    const a = sumSec(secA), b = sumSec(secB);
+    let positions = null;
+    if (kind === "out") {
+      if (node.key === "root") positions = D.activities.reduce((t, x) => t + (x.pos[col] || 0), 0);
+      else if (node.pos) positions = node.pos[col];
+    }
+    const facts = [
+      `<span><b class="num">${money(total)}</b> ב${m.label}</span>`,
+      chain.length > 1 ? `<span><b>${pct(total, root)}</b> מ${chain[0].name}</span>` : "",
+      m.cmp != null ? `<span>לעומת ${m.cmpLabel}: <b>${delta(total, node.v[m.cmp]) || "—"}</b></span>` : "",
+      a + b ? `<span>${kind === "out" ? "שכר" : "הכנסות עצמיות"}: <b>${pct(a, a + b)}</b></span>` : "",
+      positions ? `<span>משרות: <b class="num">${nf.format(positions >= 100 ? Math.round(positions) : Math.round(positions * 100) / 100)}</b></span>` : "",
+    ].filter(Boolean).join("");
+
+    const mine = state.arnona && kind === "out" ? n => `<span class="mine">החלק שלכם: ${nf.format(Math.round(state.arnona * n.v[col] / D.totals.out[col]))} ₪</span>` : () => "";
+    const all = s.all;
+    const maxKid = Math.max(1, ...all.map(n => n.v[col]));
+    const negatives = (node.kids ? node.kids() : []).filter(n => n.v[col] < 0);
+    const kidRows = all.map(n => {
+      const color = colorOf[n.key] || "var(--other)";
+      const leaf = !n.kids;
+      const tag = leaf ? "div" : "button";
+      return `<${tag} class="kid${leaf ? " leaf" : ""}" ${leaf ? "" : `data-drill="${n.key}"`}>
+          <i class="sw" style="background:${color}"></i>
+          <span class="nm">${esc(n.name)} ${n.code ? `<span class="code">${esc(n.code)}</span>` : ""}</span>
+          <span class="amt num">${money(n.v[col])}</span>
+          <span class="go" aria-hidden="true">${leaf ? "" : "‹"}</span>
+          <span class="meta"><span class="num">${pct(n.v[col], total)}</span>${m.cmp != null ? `<span>${delta(n.v[col], n.v[m.cmp])}</span>` : ""}
+            <span class="track"><span class="bar" style="width:${n.v[col] / maxKid * 100}%;background:${color}"></span></span>${mine(n)}</span>
+        </${tag}>`;
+    }).join("");
+    const negNote = negatives.length ? `<p class="note">${negatives.length} שורות עם סכום שלילי (החזרים וקיזוזים) לא מוצגות בעוגה.</p>` : "";
+
+    const calc = kind === "out" ? `
+      <div class="calc">
+        <label for="arnona">כמה ארנונה אתם משלמים בשנה?</label>
+        <input id="arnona" class="num" inputmode="numeric" placeholder="למשל 6,000" value="${state.arnona ? nf.format(state.arnona) : ""}">
+        <span class="note">ליד כל שורה יופיע החלק היחסי שלכם. זה חישוב יחסי: הארנונה נכנסת לקופה אחת עם שאר ההכנסות.</span>
+      </div>` : "";
+
+    return `
+      <section class="panel">
+        <div class="explorer">
+          <div class="donut-col">
+            <nav class="crumbs" aria-label="מיקום">${crumbs}</nav>
+            ${svg}
+            ${chain.length > 1 ? `<button class="backbtn" data-up="${chain.length - 2}">חזרה ל${esc(chain[chain.length - 2].name)}</button>` : ""}
+          </div>
+          <div class="side">
+            <div class="side-head">
+              <h2>${esc(node.name)}</h2>
+              <span class="sub">${node.code ? esc(node.code) + " · " : ""}${all.length} ${node.unit || ""}</span>
+            </div>
+            <div class="facts">${facts}</div>
+            ${yearChart(node.v)}
+            ${calc}
+            <div class="kids">${kidRows || `<p class="note" style="padding:10px 0">אין פירוט נוסף.</p>`}</div>
+            ${negNote}
+          </div>
+        </div>
+      </section>`;
+  }
+
+  // ---------- view: plan vs actual
+  function renderPlan() {
+    const year = state.planYear;
+    const bc = year === 2026 ? C.b26 : C.b25, ec = year === 2026 ? C.e26 : C.e25;
+    const blocks = ["out", "in"].map(kind => {
+      const chs = D.chapters.filter(c => c.kind === kind && (c.v[bc] || c.v[ec])).sort((a, b) => b.v[bc] - a.v[bc]);
+      const tb = (kind === "out" ? D.totals.out : D.totals.in)[bc], te = (kind === "out" ? D.totals.out : D.totals.in)[ec];
+      const max = Math.max(...chs.map(c => Math.max(c.v[bc], c.v[ec])));
+      const rows = chs.map(c => {
+        const r = c.v[bc] ? c.v[ec] / c.v[bc] : null;
+        const over = r != null && r > 1;
+        return `<div class="pv" data-tip="${esc(c.name)}<br>תקציב: ${full(c.v[bc])} ₪<br>ביצוע: ${full(c.v[ec])} ₪">
+          <span><b>${esc(c.name)}</b> <span style="color:var(--muted);font-size:13px">פרק ${c.code}</span></span>
+          <span class="num">${r == null ? "ללא תקציב" : `<span class="pill${over ? " over" : ""}">${over ? "▲ " : ""}${Math.round(r * 100)}% ביצוע</span>`}</span>
+          <span class="track"><span class="fill" style="width:${Math.max(0, c.v[ec]) / max * 100}%"></span><span class="tick" style="right:calc(${Math.max(0, c.v[bc]) / max * 100}% - 1px)"></span></span>
+        </div>`;
+      }).join("");
+      return `<section class="panel">
+        <div class="panel-head"><h2>${kind === "out" ? "הוצאות" : "הכנסות"}: תכנון מול ביצוע ${year}</h2>
+          <span class="note num">תקציב ${money(tb)} · ביצוע ${money(te)} (${pct(te, tb)})</span></div>
+        <div class="legend"><span><i class="sw" style="background:var(--exec)"></i>ביצוע בפועל</span><span><i class="sw" style="background:var(--ink);width:3px"></i>התקציב שאושר</span></div>
+        <div>${rows}</div>
+      </section>`;
+    }).join("");
+    return `<div class="controls"><span class="label">שנה:</span>
+        ${[2026, 2025].map(y => `<button class="chip" data-py="${y}" aria-pressed="${y === year}">${y}</button>`).join("")}</div>
+      <p class="note">ביצוע ${year} הוא מה שנרשם בספרים עד מועד הפקת הדוח (${esc(D.meta.reportDate || "")}). פרק שהביצוע בו עובר את התקציב מסומן ב-▲.</p>
+      ${blocks}`;
+  }
+
+  // ---------- view: activities table
+  function itemsTable(list) {
+    const col = M().col;
+    const rows = list.slice().sort((a, b) => b.v[col] - a.v[col]);
+    return `<div class="tbl-wrap"><table><thead><tr><th>סעיף</th><th>שם</th>${COL_LABELS.map(l => `<th class="n">${l}</th>`).join("")}</tr></thead><tbody>
+      ${rows.map(it => `<tr><td class="code">${it.code}</td><td class="wrap-cell">${esc(it.name)}</td>${it.v.map(x => `<td class="n">${x ? full(x) : "—"}</td>`).join("")}</tr>`).join("")}
+    </tbody></table></div>`;
+  }
+  function renderActs() {
+    const m = M(), col = m.col;
+    const q = state.q.trim();
+    let rows = D.activities.map(a => ({ a, in: a.in[col], out: a.out[col], net: a.in[col] - a.out[col], pos: a.pos[col] || 0 }))
+      .filter(r => r.in || r.out);
+    if (q) rows = rows.filter(r => r.a.name.includes(q) || r.a.code.includes(q) ||
+      items.some(i => i.activity === r.a.code && i.name.includes(q)));
+    const { key, dir } = state.sort;
+    rows.sort((x, y) => key === "name" ? dir * x.a.name.localeCompare(y.a.name, "he") : dir * (x[key] - y[key]));
+    const head = [["name", "פעילות"], ["in", "הכנסות"], ["out", "הוצאות"], ["net", "נטו (הכנסות פחות הוצאות)"], ["pos", "משרות"]];
+    const arrow = k => k === key ? (dir < 0 ? " ▼" : " ▲") : "";
+    const body = rows.map(r => {
+      const open = state.openAct === r.a.code;
+      const tr = `<tr class="clickable" data-act="${r.a.code}"><td class="wrap-cell"><b>${esc(r.a.name)}</b> <span style="color:var(--muted)">${r.a.code}</span></td>
+        <td class="n">${r.in ? full(r.in) : "—"}</td><td class="n">${r.out ? full(r.out) : "—"}</td>
+        <td class="n ${r.net < 0 ? "delta-up" : "delta-down"}">${full(r.net)}</td><td class="n">${r.pos ? r.pos : "—"}</td></tr>`;
+      return tr + (open ? `<tr><td colspan="5" style="white-space:normal;padding:12px">${itemsTable(items.filter(i => i.activity === r.a.code))}</td></tr>` : "");
+    }).join("");
+    const costly = rows.filter(r => r.net < 0).length;
+    return `<section class="panel">
+      <div class="panel-head"><h2>כמה עולה כל פעילות</h2><span class="note">${rows.length} פעילויות · ${m.label}</span></div>
+      <p class="lede">כל פעילות מקבצת את ההכנסות וההוצאות שלה. הנטו מראה כמה הרשות משלמת מהקופה הכללית אחרי השתתפות המשרדים, ההורים והאגרות. ${costly} פעילויות עולות לרשות יותר ממה שהן מכניסות.</p>
+      <input class="search" id="q" type="search" placeholder="חיפוש פעילות או סעיף, למשל: גני ילדים" value="${esc(state.q)}">
+      <div class="tbl-wrap" style="max-height:70vh"><table>
+        <thead><tr>${head.map(([k, l]) => `<th class="sortable${k === "name" ? "" : " n"}" data-sort="${k}">${l}${arrow(k)}</th>`).join("")}</tr></thead>
+        <tbody>${body || `<tr><td colspan="5">לא נמצאו פעילויות שמתאימות לחיפוש.</td></tr>`}</tbody></table></div>
+      <p class="note">לחצו על שורה כדי לפתוח את הסעיפים שלה. לחיצה על כותרת עמודה ממיינת.</p>
+    </section>`;
+  }
+
+  // ---------- render
+  function render() {
+    document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", String(t.dataset.view === state.view)));
+    renderMeasures();
+    const heads = { out: "לאן הולך הכסף?", in: "מאיפה הכסף בא?", plan: "האם עומדים בתקציב?", acts: "כמה עולה כל שירות?" };
+    document.getElementById("headline").textContent = heads[state.view];
+    const tOut = D.totals.out[C.b26], tIn = D.totals.in[C.b26], sur = tIn - tOut;
+    document.getElementById("lede").innerHTML =
+      `התקציב של ${esc(D.meta.authority)} לשנת 2026 הוא <b class="num">${money(tOut)}</b> בהוצאות ו-<b class="num">${money(tIn)}</b> בהכנסות` +
+      (Math.abs(sur) >= 1000 ? ` (${sur < 0 ? "גירעון מתוכנן של" : "עודף מתוכנן של"} ${money(Math.abs(sur))})` : "") +
+      (state.view === "out" || state.view === "in" ? `. לחצו על פלח בעוגה כדי לרדת לפרק, לפעילות ולסעיף.` : ".");
+    const v = document.getElementById("view");
+    v.innerHTML = state.view === "out" ? renderFlow("out") : state.view === "in" ? renderFlow("in")
+      : state.view === "plan" ? renderPlan() : renderActs();
+  }
+
+  function drill(key) {
+    const kind = state.view;
+    state.path[kind] = [...state.path[kind], key];
+    render();
+  }
+  const view = document.getElementById("view");
+  view.addEventListener("click", e => {
+    const d = e.target.closest("[data-drill]");
+    if (d) { drill(d.dataset.drill); return; }
+    const up = e.target.closest("[data-up]");
+    if (up) { state.path[state.view] = state.path[state.view].slice(0, +up.dataset.up); render(); return; }
+    const py = e.target.closest("[data-py]");
+    if (py) { state.planYear = +py.dataset.py; render(); return; }
+    const s = e.target.closest("[data-sort]");
+    if (s) { const k = s.dataset.sort; state.sort = { key: k, dir: state.sort.key === k ? -state.sort.dir : (k === "name" ? 1 : -1) }; render(); return; }
+    const act = e.target.closest("[data-act]");
+    if (act) { state.openAct = state.openAct === act.dataset.act ? null : act.dataset.act; render(); }
+  });
+  view.addEventListener("keydown", e => {
+    const d = e.target.closest && e.target.closest(".slice[data-drill]");
+    if (d && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); drill(d.dataset.drill); }
+  });
+  view.addEventListener("input", e => {
+    if (e.target.id === "arnona") {
+      state.arnona = Number(e.target.value.replace(/[^\d]/g, "")) || null;
+      render();
+      const inp = document.getElementById("arnona");
+      inp.focus(); try { inp.setSelectionRange(inp.value.length, inp.value.length); } catch (_) {}
+    } else if (e.target.id === "q") {
+      state.q = e.target.value; state.openAct = null;
+      render();
+      const inp = document.getElementById("q"); inp.focus(); inp.setSelectionRange(inp.value.length, inp.value.length);
+    }
+  });
+
+  document.getElementById("sources").innerHTML = `
+    <h2>מאיפה המספרים</h2>
+    <p>כל הנתונים נקראו משני דוחות של ${esc(D.meta.authority)} שהופקו ב-${esc(D.meta.reportDate || "")}: <b>ריכוז תקבולים ותשלומים לפי פרקי התקציב</b> (טופס 2, במבנה האחיד של משרד הפנים) ו<b>דוח מפורט לפי פעילויות</b>.</p>
+    <p>כל סעיף נבדק מול שני הדוחות, וכל פרק, קבוצה וסך כולל נבדקו מול שורות הסיכום שלהם: ${nf.format(D.meta.checks || 0)} בדיקות, כולן עברו. הפרשים של שקל בודד נובעים מעיגול המספרים בדוחות עצמם.</p>
+    <p>בעוגה מוצגים שבעת החלקים הגדולים, וכל השאר מקובצים בפלח "אחר", שגם אותו אפשר לפתוח. העמודות "ביצוע" הן מה שנרשם בפועל עד מועד הפקת הדוח. הסכומים בשקלים של כל שנה, בלי תיקון לאינפלציה.</p>
+    <p>התקציב הרגיל בלבד. תקציבי הפיתוח (תב"רים) הם מסמך נפרד.</p>`;
+
+  const VIEWS = ["out", "in", "plan", "acts"];
+  const fromHash = () => { const h = (location.hash || "").slice(1); return VIEWS.includes(h) ? h : null; };
+  window.addEventListener("hashchange", () => { const h = fromHash(); if (h && h !== state.view) setView(h); });
+  state.view = fromHash() || "out";
+  render();
+}
+
+// Plain build: data.js sets BUDGET_DATA. Protected build: data.js holds only
+// BUDGET_ENC, an AES-GCM ciphertext that the password decrypts in the browser.
+(function () {
+  const wrap = document.querySelector(".wrap");
+  if (window.BUDGET_DATA) { startApp(window.BUDGET_DATA); return; }
+  const E = window.BUDGET_ENC;
+  const gate = document.getElementById("gate"), form = document.getElementById("gate-form");
+  const input = document.getElementById("gate-pw"), err = document.getElementById("gate-err");
+  const btn = form.querySelector("button");
+  wrap.hidden = true; gate.hidden = false; input.focus();
+  const bytes = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  async function decrypt(pw) {
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(pw), "PBKDF2", false, ["deriveKey"]);
+    const key = await crypto.subtle.deriveKey(
+      { name: "PBKDF2", hash: "SHA-256", salt: bytes(E.salt), iterations: E.iter },
+      base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: bytes(E.iv) }, key, bytes(E.ct));
+    return JSON.parse(new TextDecoder().decode(plain));
+  }
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    err.hidden = true; btn.disabled = true;
+    try {
+      const data = await decrypt(input.value.trim());
+      gate.hidden = true; wrap.hidden = false;
+      startApp(data);
+    } catch (_) {
+      err.hidden = false; input.select();
+    }
+    btn.disabled = false;
+  });
+})();
+</script>
